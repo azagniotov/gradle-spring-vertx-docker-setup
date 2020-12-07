@@ -1,0 +1,42 @@
+# Java Gradle CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-java/ for more details
+#
+version: 2
+jobs:
+  build:
+    machine: true
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      - run:
+          name: Run unit tests
+          command: ./gradlew clean test
+          when: always
+
+      - run:
+          name: Build Docker image
+          command: docker build -t spring-vertx-gradle-in-docker:$CIRCLE_BRANCH .
+          when: on_success
+
+      - run:
+          name: Start application in the Docker container
+          command: docker run -p 8080:8080 --name the-app spring-vertx-gradle-in-docker:$CIRCLE_BRANCH
+          when: on_success
+
+      - run:
+          name: cURL /ping using a GET request
+          command: docker exec -it the-app curl http://localhost:8080/ping
+          when: on_success

@@ -1,3 +1,5 @@
+[![CircleCI build master branch][circleci-badge]][circleci-link]
+
 # Gradle Spring & Vert.x Docker Application Skeleton
 Basic Gradle `v6.7.1` multi-source-set project setup for Spring Boot & Vert.x application skeleton. Can be built using multi-stage Docker build.
 
@@ -19,3 +21,8 @@ If your cURLs fail with Connection refused, it means that the mapping of host ma
 
 ## License
 MIT. See LICENSE for details
+
+<!-- references -->
+
+[circleci-badge]: https://circleci.com/gh/azagniotov/gradle-spring-vertx-docker-setup.svg?style=shield
+[circleci-link]: https://circleci.com/gh/azagniotov/gradle-spring-vertx-docker-setup
