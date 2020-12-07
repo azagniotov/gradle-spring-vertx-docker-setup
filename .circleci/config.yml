@@ -48,5 +48,5 @@ jobs:
 
       - run:
           name: cURL /ping using a GET request
-          command: docker exec -it the-app curl --retry 10 --retry-connrefused http://localhost:8080/ping
+          command: docker exec -it the-app curl --retry 10 --retry-connrefused http://172.17.0.2:8080/ping
           when: on_success
