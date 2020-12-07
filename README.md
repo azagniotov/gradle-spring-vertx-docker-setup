@@ -5,6 +5,7 @@ The project skeleton helps to be up and running quickly without wasting too much
 
 * Gradle project setup boiler plate
 * Gluing Spring Boot Dependency Injection & Vert.x verticle factory
+* Enabling Netty native transport (https://netty.io/wiki/native-transports.html) on BSD (OSX) and Linux through Vert.x
 * Deploying on each available CPU core a dedicated Vert.x server verticle instance
 * Building & running in Docker environment using a multi-stage Docker build.
 
