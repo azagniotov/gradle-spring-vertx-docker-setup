@@ -28,9 +28,12 @@ public class ServerVerticle extends AbstractVerticle {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerVerticle.class);
     private final VertxServerConfig vertxServerConfig;
+    private final HttpServerOptions httpServerOptions;
 
-    public ServerVerticle(final VertxServerConfig vertxServerConfig) {
+    public ServerVerticle(final VertxServerConfig vertxServerConfig,
+                          final HttpServerOptions httpServerOptions) {
         this.vertxServerConfig = vertxServerConfig;
+        this.httpServerOptions = httpServerOptions;
     }
 
     @Override
@@ -46,12 +49,6 @@ public class ServerVerticle extends AbstractVerticle {
 
     private Future<Void> startHttpServer() {
         Promise<Void> promise = Promise.promise();
-
-        // cURL first sends "Expect: 100-continue" header before the actual POST payload and
-        // waits blocking for a header response "HTTP/1.1 100 Continue". The waiting can take more than 500ms.
-        //
-        // https://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html => 8.2.3 Use of the 100 (Continue) Status
-        final HttpServerOptions httpServerOptions = new HttpServerOptions().setHandle100ContinueAutomatically(true);
         HttpServer server = vertx.createHttpServer(httpServerOptions);
 
         Router router = Router.router(vertx);

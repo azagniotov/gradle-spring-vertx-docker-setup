@@ -20,17 +20,17 @@ public class Main {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     @Autowired
+    private Vertx vertx;
+
+    @Autowired
     private ServerVerticleFactory serverVerticleFactory;
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
     }
 
-
     @PostConstruct
     public void deployServer() {
-
-        final Vertx vertx = Vertx.vertx();
 
         final String serverVerticleClassName = ServerVerticle.class.getName();
         // https://groups.google.com/g/vertx/c/WjBbTbWBBqA/m/mRqfdzGrBQAJ
