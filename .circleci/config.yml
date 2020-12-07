@@ -37,6 +37,16 @@ jobs:
           when: on_success
 
       - run:
+          name: List Docker containers as a sanity check
+          command: docker ps
+          when: on_success
+
+      - run:
+          name: Inspect running Docker container
+          command: docker inspect the-app
+          when: on_success
+
+      - run:
           name: cURL /ping using a GET request
-          command: docker exec -it the-app curl http://localhost:8080/ping
+          command: docker exec -it the-app curl --retry 10 --retry-connrefused http://localhost:8080/ping
           when: on_success
