@@ -33,7 +33,7 @@ jobs:
 
       - run:
           name: Start application in the Docker container
-          command: docker run -p 8080:8080 --name the-app spring-vertx-gradle-in-docker:$CIRCLE_BRANCH
+          command: docker run -d -p 8080:8080 --name the-app spring-vertx-gradle-in-docker:$CIRCLE_BRANCH
           when: on_success
 
       - run:
