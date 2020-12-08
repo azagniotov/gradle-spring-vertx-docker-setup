@@ -35,6 +35,7 @@ dependencies {
     implementation "ch.qos.logback:logback-classic:1.2.3"
 
     implementation "io.vertx:vertx-web:${vertxVersion}"
+    implementation "io.vertx:vertx-web-api-contract:${vertxVersion}"
 
     OperatingSystem os = DefaultNativePlatform.currentOperatingSystem;
     if (os.linux) {

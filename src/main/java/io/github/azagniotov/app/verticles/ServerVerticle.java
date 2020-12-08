@@ -12,6 +12,8 @@ import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.api.validation.HTTPRequestValidationHandler;
+import io.vertx.ext.web.api.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
@@ -52,10 +54,26 @@ public class ServerVerticle extends AbstractVerticle {
         HttpServer server = vertx.createHttpServer(httpServerOptions);
 
         Router router = Router.router(vertx);
-        router.get("/ping").handler(routingContext -> routingContext.response()
-                .putHeader(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON.toString())
-                .setStatusCode(HttpResponseStatus.OK.code())
-                .end(Json.encodePrettily(new JsonObject().put("status", "pong"))));
+
+        HTTPRequestValidationHandler httpRequestValidationHandler = HTTPRequestValidationHandler
+                .create().addPathParamWithPattern("ping", "ping");
+
+        router.get("/api/v1/health/:ping")
+                .handler(httpRequestValidationHandler)
+                .handler(routingContext -> {
+                    routingContext.response()
+                            .putHeader(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON.toString())
+                            .setStatusCode(HttpResponseStatus.OK.code())
+                            .end(Json.encodePrettily(new JsonObject().put("status", "pong")));
+                })
+                .failureHandler((routingContext) -> {
+                    Throwable failure = routingContext.failure();
+                    if (failure instanceof ValidationException) {
+                        LOGGER.error("Validation exception: {}", failure.getMessage());
+                    }
+
+                    routingContext.next();
+                });
 
         server.requestHandler(router)
                 .listen(vertxServerConfig.getServerPort(), vertxServerConfig.getServerAddress(), asyncResult -> {
